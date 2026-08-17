@@ -97,6 +97,7 @@ next-time/
 ├── NEXT_TIME.md              # Universal agent instruction (any AI agent)
 ├── README.md                 # English
 ├── README.zh-TW.md           # Traditional Chinese
+├── README.zh-CN.md           # Simplified Chinese
 ├── LICENSE
 │
 ├── core/
