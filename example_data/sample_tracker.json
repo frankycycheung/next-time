@@ -1,0 +1,106 @@
+[
+  {
+    "id": "nt-001",
+    "captured_at": "2026-07-12T14:30:00+08:00",
+    "text": "next time try that ramen place in Causeway Bay",
+    "category": "food",
+    "source": "telegram:user_01",
+    "sender": "User",
+    "context": {
+      "participants": ["User", "Friend"],
+      "conversation_preview": "Friend: 知唔知港島有咩好嘢食？\nUser: 推薦漁獲，okinawa style 好正\nFriend: 尖沙咀有間日式都唔錯\nUser: oh 邊間？\nFriend: 我send link俾你\nUser: 好，下次一齊去！",
+      "source": "telegram:user_01"
+    },
+    "status": "pending",
+    "deadline": null,
+    "followed_up": 2,
+    "last_activity": "2026-07-12T14:30:00+08:00"
+  },
+  {
+    "id": "nt-002",
+    "captured_at": "2026-07-28T09:15:00+08:00",
+    "text": "someday learn Rust properly",
+    "category": "learn",
+    "source": "telegram:user_01",
+    "sender": "User",
+    "context": {
+      "participants": ["User"],
+      "conversation_preview": "User: been reading about Rust's ownership model\nUser: 下次得閒認真學下 Rust",
+      "source": "telegram:user_01"
+    },
+    "status": "pending",
+    "deadline": null,
+    "followed_up": 1,
+    "last_activity": "2026-07-28T09:15:00+08:00"
+  },
+  {
+    "id": "nt-003",
+    "captured_at": "2026-08-05T20:00:00+08:00",
+    "text": "帶伴侶去大嶼山睇日落",
+    "category": "relationship",
+    "source": "whatsapp:user_02",
+    "sender": "User",
+    "context": {
+      "participants": ["User", "Partner"],
+      "conversation_preview": "Partner: 好耐冇去郊外\nUser: 係喎，下次帶你去大嶼山睇日落！\nPartner: 好呀 😊",
+      "source": "whatsapp:user_02"
+    },
+    "status": "pending",
+    "deadline": null,
+    "followed_up": 3,
+    "last_activity": "2026-08-05T20:00:00+08:00"
+  },
+  {
+    "id": "nt-004",
+    "captured_at": "2026-08-10T11:00:00+08:00",
+    "text": "한번 부산 여행 가자",
+    "category": "travel",
+    "source": "telegram:user_03",
+    "sender": "User",
+    "context": {
+      "participants": ["User", "TravelBuddy"],
+      "conversation_preview": "TravelBuddy: 부산 해운대 진짜 좋아\nUser: 한번 부산 여행 가자! 다음에 시간 될 때",
+      "source": "telegram:user_03"
+    },
+    "status": "scheduled",
+    "deadline": "2027-03-01T00:00:00+09:00",
+    "followed_up": 0,
+    "last_activity": "2026-08-10T11:00:00+08:00"
+  },
+  {
+    "id": "nt-005",
+    "captured_at": "2026-06-20T16:45:00+08:00",
+    "text": "今度あのラーメン屋に行く",
+    "category": "food",
+    "source": "telegram:user_01",
+    "sender": "User",
+    "context": {
+      "participants": ["User"],
+      "conversation_preview": "User: 見てこのラーメン！今度行ってみる",
+      "source": "telegram:user_01"
+    },
+    "status": "completed",
+    "deadline": null,
+    "followed_up": 1,
+    "last_activity": "2026-07-10T12:00:00+08:00",
+    "completed_at": "2026-07-10T12:00:00+08:00"
+  },
+  {
+    "id": "nt-006",
+    "captured_at": "2026-03-05T10:00:00+08:00",
+    "text": "研究下 LangGraph agents",
+    "category": "learn",
+    "source": "telegram:user_01",
+    "sender": "User",
+    "context": {
+      "participants": ["User"],
+      "conversation_preview": "User: LangGraph 好似幾勁，下次研究下",
+      "source": "telegram:user_01"
+    },
+    "status": "archived",
+    "deadline": null,
+    "followed_up": 2,
+    "last_activity": "2026-03-05T10:00:00+08:00",
+    "archive_reason": "auto-archived after 165 days inactive"
+  }
+]

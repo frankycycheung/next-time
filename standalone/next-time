@@ -1,0 +1,176 @@
+#!/usr/bin/env python3
+"""
+next-time CLI — Standalone version, no Hermes dependency.
+
+Usage:
+    next-time add "next time try that ramen place"
+    next-time list
+    next-time list --category food
+    next-time done nt-003
+    next-time drop nt-001
+    next-time archive
+    next-time stats
+    next-time export md
+"""
+
+import argparse
+import json
+import sys
+import os
+
+# Add parent to path if running from repo
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+
+from core.tracker import Tracker
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Next-Time — Track your deferred actions",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  next-time add "下次試中環間拉麵店"
+  next-time add --source whatsapp "someday go to japan"
+  next-time list
+  next-time list --category learn
+  next-time done nt-003
+  next-time archive
+  next-time stats
+  next-time export md
+        """,
+    )
+
+    sub = parser.add_subparsers(dest="command", required=True)
+
+    # add
+    add_p = sub.add_parser("add", help="Capture a new deferred action")
+    add_p.add_argument("text", help="The deferred action text")
+    add_p.add_argument("--source", default="cli", help="Source identifier")
+    add_p.add_argument("--category", help="Category override (food/travel/work/etc)")
+
+    # list
+    list_p = sub.add_parser("list", help="List captured items")
+    list_p.add_argument("--status", choices=["pending", "completed", "dropped", "archived"])
+    list_p.add_argument("--category")
+    list_p.add_argument("--all", action="store_true", dest="include_archived",
+                        help="Include archived items")
+    list_p.add_argument("--json", action="store_true", help="Output as JSON")
+
+    # done
+    done_p = sub.add_parser("done", help="Mark item as completed")
+    done_p.add_argument("item_id", help="Item ID (e.g. nt-003)")
+
+    # drop
+    drop_p = sub.add_parser("drop", help="Remove an item permanently")
+    drop_p.add_argument("item_id", help="Item ID (e.g. nt-001)")
+
+    # archive
+    sub.add_parser("archive", help="Run smart archive sweep")
+
+    # recover
+    recover_p = sub.add_parser("recover", help="Recover an archived item")
+    recover_p.add_argument("item_id", help="Item ID (e.g. nt-006)")
+
+    # stats
+    sub.add_parser("stats", help="Show completion statistics")
+
+    # export
+    export_p = sub.add_parser("export", help="Export data")
+    export_p.add_argument("format", choices=["json", "csv", "md", "markdown"],
+                          default="json", nargs="?")
+
+    args = parser.parse_args()
+
+    tracker = Tracker()
+
+    if args.command == "add":
+        item = tracker.add(
+            text=args.text,
+            source=args.source,
+            category=args.category,
+        )
+        emoji = tracker.categorizer.get_emoji(item["category"])
+        print(f"✓ Saved: {emoji} {item['text']}  [{item['id']}]")
+
+    elif args.command == "list":
+        items = tracker.list(
+            status=args.status,
+            category=args.category,
+            include_archived=args.include_archived,
+        )
+        if not items:
+            print("No items found.")
+            return
+
+        if args.json:
+            print(json.dumps(items, ensure_ascii=False, indent=2))
+            return
+
+        print(f"\n{'ID':<8} {'Status':<10} {'Cat':<6} {'Text'}")
+        print("-" * 70)
+        for item in items:
+            status_icon = {
+                "pending": "⏳", "completed": "✅", "dropped": "🗑️",
+                "archived": "📦", "scheduled": "📅",
+            }.get(item.get("status", ""), "❓")
+            emoji = tracker.categorizer.get_emoji(item.get("category", "other"))
+            print(f"{item['id']:<8} {status_icon:<10} {emoji:<6} {item['text']}")
+
+    elif args.command == "done":
+        item = tracker.update_status(args.item_id, "completed")
+        if item:
+            print(f"✅ {item['text']} — completed!")
+        else:
+            print(f"✗ Item {args.item_id} not found")
+
+    elif args.command == "drop":
+        if tracker.remove(args.item_id):
+            print(f"🗑️ {args.item_id} removed")
+        else:
+            print(f"✗ Item {args.item_id} not found")
+
+    elif args.command == "archive":
+        result = tracker.smart_archive()
+        flagged = result["flagged"]
+        archived = result["archived"]
+        if flagged:
+            print(f"⚠️ Flagged {len(flagged)} items for review")
+            for f in flagged:
+                print(f"  {f['id']}: \"{f['text']}\" ({f['days_inactive']}d inactive)")
+        if archived:
+            print(f"📦 Archived {len(archived)} items")
+            for a in archived:
+                print(f"  {a['id']}: \"{a['text']}\"")
+        if not flagged and not archived:
+            print("✓ Nothing to archive")
+
+    elif args.command == "recover":
+        item = tracker.recover(args.item_id)
+        if item:
+            print(f"♻️ {item['text']} — recovered to pending")
+        else:
+            print(f"✗ Item {args.item_id} not found or not archived")
+
+    elif args.command == "stats":
+        stats = tracker.stats()
+        print("\n📊 Next-Time Statistics")
+        print("=" * 40)
+        print(f"Total items:      {stats['total']}")
+        print(f"Completed:        {stats['completed']}")
+        print(f"Pending:          {stats['pending']}")
+        print(f"Archived:         {stats['archived']}")
+        print(f"Dropped:          {stats['dropped']}")
+        print(f"Completion rate:  {stats['completion_rate_pct']}%")
+        print("\nBy category:")
+        for cat, count in sorted(stats["by_category"].items()):
+            emoji = tracker.categorizer.get_emoji(cat)
+            print(f"  {emoji} {cat}: {count}")
+
+    elif args.command == "export":
+        output = tracker.export(args.format)
+        print(output)
+
+
+if __name__ == "__main__":
+    main()
