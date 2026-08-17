@@ -148,7 +148,3 @@ python -m pytest tests/ -v
 - [語言模式檔案](core/patterns.json) — 新增你的語言
 
 ---
-
-<p align="center">
-  <sub>❤️ 你的 AI 代理已經知道如何使用這個工具。</sub>
-</p>

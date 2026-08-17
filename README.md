@@ -148,7 +148,3 @@ We all say "next time" dozens of times a month. Studies show that deferred inten
 - [Pattern file](core/patterns.json) — Add your language
 
 ---
-
-<p align="center">
-  <sub>Built with ❤️ · Your agent already knows how to use this.</sub>
-</p>
